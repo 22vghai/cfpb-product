@@ -17,12 +17,22 @@ def update_text():
             {
                 "name": "Cardy McCardfaceAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "provider": "Some Bank",
-                "apr": 42,
-                "annual_fees": 99999,
+                "apr": "42%",
+                "annual_fees": "$99999",
                 "extra_fees": "sell us your soul",
                 "benefits": "lmao none",
-                "secured": false,
+                "is_secured": false,
                 "misc_terms": "idk i forgor"
+            },
+            {
+                "name": "Some card 2.0",
+                "provider": "Another Bank",
+                "apr": "99%",
+                "annual_fees": "$0",
+                "extra_fees": "???",
+                "benefits": "???",
+                "secured": true,
+                "misc_terms": "none"
             }
         ]
     }'''

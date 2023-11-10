@@ -1,14 +1,20 @@
-states = [ 'PLEASE SELECT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+const ENUM_CARD_PROPERTIES = {
+    "apr": "APR", 
+    "annual_fees": "Annual Fees", 
+    "extra_fees": "Extra Fees", 
+    "benefits": "Benefits", 
+    "misc_terms": "Misc. Terms"
+};
+const states = [ 'PLEASE SELECT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
            'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
            'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
            'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
            'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY'];
-state_options = []
+let state_options = []
 for (const state of states) {
     state_options.push({ text: state });
 }
 const questions = [
-    /*
     {
         question: "What state do you live in?",
         answers: state_options,
@@ -66,7 +72,6 @@ const questions = [
             { text: "greater than or equal to 720" },
         ]
     },
-    */
     {
         question: "Do you have past credit card debt?",
         answers: [
@@ -150,7 +155,18 @@ async function showResults() {
 
         let [provider_name_container, ] = make_tooltip(card.provider, card.provider);
         card_div.appendChild(provider_name_container);
-        
+
+        let info_grid = document.createElement('DIV');
+        info_grid.classList.add('carddata');
+        for (const prop in ENUM_CARD_PROPERTIES) {
+            let prop_div = document.createElement('DIV');
+            let val_div = document.createElement('DIV'); 
+            prop_div.innerText = ENUM_CARD_PROPERTIES[prop];
+            val_div.innerText = card[prop];
+            info_grid.appendChild(prop_div);
+            info_grid.appendChild(val_div);
+        }
+        card_div.appendChild(info_grid);
 
         document.querySelector('#cardresults').appendChild(card_div);
     }
@@ -168,6 +184,7 @@ function make_tooltip(main_text, tooltip_text) {
     let label = document.createElement('DIV');
     label.style.whiteSpace = "nowrap";
     label.style.overflow = "hidden";
+    label.style.maxWidth = "100%";
     label.innerText = main_text; container.dataset.text = tooltip_text;
     container.appendChild(label);
     return [container, label];

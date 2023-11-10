@@ -85,6 +85,7 @@ body {
     align-items: center;
     justify-content: start;
 
+    gap: 10px;
     flex: calc(50% - 20px);
     max-width: calc(50% - 20px);
     padding: 20px;
@@ -127,4 +128,13 @@ body {
 }
 .hovertip:hover:before {
     display:block;
+}
+
+.carddata {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.carddata > * {
+    text-align: left;
 }
