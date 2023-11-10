@@ -5,7 +5,9 @@
     box-sizing: border-box;
 }
 body{
-    background: #001e4d;
+    background-image: url(light_yellow_blue_bg_lg.jpg);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
 }
 .app{
     background: #fff;
