@@ -1,121 +1,158 @@
+states = [ 'PLEASE SELECT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
+           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
+           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
+           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY'];
+state_options = []
+for (const state of states) {
+    state_options.push({ text: state });
+}
 const questions = [
+    {
+        question: "What state do you live in?",
+        answers: state_options,
+        dropdown: true,
+    },
     {
         question: "How often do you eat out at a restaraunt?",
         answers: [
-            { text: "daily", correct: false},
-            { text: "weekly", correct: true},
-            { text: "biweekly", correct: false},
-            { text: "every weekend", correct: false},
+            { text: "daily" },
+            { text: "weekly" },
+            { text: "biweekly" },
+            { text: "every weekend" },
         ]
     },
     {
         question: "How often do you order takeout?",
         answers: [
-            { text: "daily", correct: true},
-            { text: "weekly", correct: false},
-            { text: "biweekly", correct: false},
-            { text: "every weekend", correct: false},
+            { text: "daily" },
+            { text: "weekly" },
+            { text: "biweekly" },
+            { text: "every weekend" },
         ]
     },
     {
         question: "How much income do you earn yearly?",
         answers: [
-            { text: "<$30,000", correct: false},
-            { text: "$30,000-$60,000", correct: false},
-            { text: "$60,000-$80,000", correct: false},
-            { text: "$80,000>", correct: true},
+            { text: "<$30,000" },
+            { text: "$30,000-$60,000" },
+            { text: "$60,000-$80,000" },
+            { text: "$80,000>" },
         ]
     },
     {
         question: "What year of college are you currently in",
         answers: [
-            { text: "freshman", correct: false},
-            { text: "sophmore", correct: true},
-            { text: "junior", correct: false},
-            { text: "senior", correct: false},
+            { text: "freshman" },
+            { text: "sophmore" },
+            { text: "junior" },
+            { text: "senior" },
         ]
     },
-    
+    {
+        question: "Have you had a credit card before?",
+        answers: [
+            { text: "yes" },
+            { text: "no, never applied for one" },
+            { text: "no, applied and was rejected" },
+        ]
+    },
+    {
+        question: "Do you have a credit score? If so, what range is it in?",
+        answers: [
+            { text: "less than or equal to 619" },
+            { text: "between 620 and 719 (inclusive)" },
+            { text: "greater than or equal to 720" },
+        ]
+    },
+    {
+        question: "Do you have past credit card debt?",
+        answers: [
+            { text: "no" },
+            { text: "yes, less than $1,000" },
+            { text: "yes, between $1,001 and $5,000" },
+            { text: "yes, more than $5,000" },
+        ]
+    }
 ];
+let responses = [];
 
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
 
 let currentQuestionIndex = 0;
-let score = 0;
 
-function startQuiz(){
+function startQuiz() {
     currentQuestionIndex = 0;
-    score = 0;
+    responses = [];
     nextButton.innerHTML = "Next";
     showQuestion();
 };
 
-function showQuestion(){
+function showQuestion() {
     resetState();
-    let currentQuestion = questions[currentQuestionIndex];
-    let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.
-    question;
+    let question = questions[currentQuestionIndex];
+    questionElement.innerText = '' + (currentQuestionIndex + 1) + ". " + question.question;
 
-    currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerHTML = answer.text;
+    let append_to = answerButtons;
+    if (question.dropdown) {
+        append_to = document.createElement('SELECT');
+        answerButtons.appendChild(append_to);
+    }
+    let option_num = 0;
+    for (const answer of question.answers) {
+        let button = document.createElement((question.dropdown == true) ? 'OPTION' : 'BUTTON');
+        button.innerText = answer.text;
         button.classList.add("btn");
-        answerButtons.appendChild(button);
-        if(answer.correct){
-            button.dataset.correct = answer.correct;
-        }
-        button.addEventListener("click", selectAnswer);
-    });
+        option_num += 1;
+        append_to.appendChild(button);
+        button.addEventListener("click", function() {
+            responses[currentQuestionIndex] = option_num;
+            nextButton.style.display = "block";
+            window.scrollTo(0, document.body.scrollHeight);
+            if (question.dropdown == true) { return; }
+            for (choice of append_to.children) {
+                choice.classList.remove('optionselected');
+            }
+            button.classList.add('optionselected');
+        });
+    }
 }
 
-function resetState(){
+function resetState() {
     nextButton.style.display = "none";
-    while(answerButtons.firstChild){
+    while (answerButtons.firstChild) {
         answerButtons.removeChild(answerButtons.firstChild);
     }
 }
 
-function selectAnswer(e){
-    const selectedBtn = e.target;
-    const isCorrect = selectedBtn.dataset.correct === "true";
-    if(isCorrect){
-        selectedBtn.classList.add("correct");
-        score++;
-    }else{
-        selectedBtn.classList.add("incorrect");
-    }
-    Array.from(answerButtons.children).forEach(button => {
-        if(button.dataset.correct === "true"){
-            button.classList.add("correct");
-        }
-        button.disabled = "true";
+async function showResults() {
+    const response = await fetch('/fetchcards', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(responses),
     });
-    nextButton.style.display = "block";
-}
-
-function showScore(){
+    const recommends = await response.text();
+    questionElement.innerText = recommends;
     resetState();
-    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
     nextButton.innerHTML = "Retake Quiz";
     nextButton.style.display = "block";
 }
 
-function handleNextButton(){
+async function handleNextButton() {
     currentQuestionIndex++;
     if(currentQuestionIndex < questions.length){
         showQuestion();
-    }else{
-        showScore();
+    } else {
+        await showResults();
     }
 }
 
-nextButton.addEventListener("click", ()=> {
-    if(currentQuestionIndex < questions.length){
-        handleNextButton();
-    }else{
+nextButton.addEventListener("click", async () => {
+    if(currentQuestionIndex < questions.length) {
+        await handleNextButton();
+    } else {
         startQuiz();
     }
 });
