@@ -12,7 +12,7 @@ body {
 .app {
     background: #fff;
     width: 90%;
-    max-width: 600px;
+    max-width: 800px;
     margin: 100px auto 0;
     border-radius: 10px;
     padding: 30px;
@@ -21,8 +21,7 @@ body {
     font-size: 25px;
     color: #001e4d;
     font-weight: 600;
-    border-bottom: 1px solid #333;
-    padding-bottom:30 px;    
+    padding-bottom: 30 px;    
 }
 .quiz {
     padding: 20 px 0;
@@ -67,4 +66,65 @@ body {
 }
 .optionselected {
     background-color: #9aeabc !important;
+}
+
+#resultspane {
+    display: none;
+}
+#cardresults {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.cardinfo {
+    border-radius: 8px;
+    background-color: #dfdfdf;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    flex: calc(50% - 20px);
+    max-width: calc(50% - 20px);
+    padding: 20px;
+}
+@media screen and (max-width: 1000px) {
+    .cardinfo {
+        flex: 100%;
+        max-width: 100%;
+    }
+}
+@media screen and (max-width: 600px) {
+    #cardresults {
+        flex-direction: column;
+    }
+}
+
+.hovertip {
+    position: relative;
+    max-width: 100%;
+}
+.hovertip:before {
+    position: absolute;
+    content: attr(data-text);
+    
+    top: 50%;
+    transform: translateY(-50%);
+    
+    left: 100%;
+    margin-left: 15px;
+
+    width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+  
+    display: none;
+    overflow-wrap: break-word;
+}
+.hovertip:hover:before {
+    display:block;
 }

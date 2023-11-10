@@ -10,6 +10,21 @@ def index():
 def update_text():
     data = request.json
     print(data)
-    return r'{val: "will fill in picker later"}'
+    return r'''{
+        "profile": "Avid Spender",
+        "profileinfo": "You're gonna go broke",
+        "cards": [
+            {
+                "name": "Cardy McCardfaceAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "provider": "Some Bank",
+                "apr": 42,
+                "annual_fees": 99999,
+                "extra_fees": "sell us your soul",
+                "benefits": "lmao none",
+                "secured": false,
+                "misc_terms": "idk i forgor"
+            }
+        ]
+    }'''
 
 app.run(port=8080)

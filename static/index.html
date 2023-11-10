@@ -68,7 +68,7 @@
 
 
         <!-- Trigger button to open the modal -->
-        <button onclick="openModal()">Click Me</button>
+        <!--<button onclick="openModal()">Click Me</button>-->
         
         <!-- The Modal -->
         <div id="myModal" class="modal">
@@ -110,7 +110,7 @@
                   <img src="static/credit_cards.jpg" class="d-block mx-lg-auto img-fluid" alt="Credit_Card_Placeholder" width="700" height="500" loading="lazy">
                 </div>
                 <div class="col-lg-6">
-                  <center><h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="background-color: #fff;">Credit Decisions Made Easy</h1><br></center>
+                  <center><h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3 rounded" style="background-color: #fff;">Credit Decisions Made Easy</h1><br></center>
                   <p class="lead" style="color: aliceblue;">A system that provides you all of the information you need about credit cards!</p>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <!--<button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
@@ -123,32 +123,30 @@
         </center>
 
         <section id="quiz">
-            <div class="app">
-            <center>
-                <h1 style="font-family: 'Times New Roman', Times, serif;">Welcome to Credit Picker!</h1>
-            </center><br>
-                <div class="quiz">
-                    <h2 id="question">Question goes here</h2>
-                    <div id="answer-buttons">
-                        <button class="btn">Answer 1</button>
-                        <button class="btn">Answer 2</button>
-                        <button class="btn">Answer 3</button>
-                        <button class="btn">Answer 4</button>
-                    </div>
-                <button id="next-btn"> Next</button>
+            <div id="quizpane" class="app">
+              <center>
+                  <h1 style="font-family: 'Times New Roman', Times, serif;">Welcome to Credit Picker!</h1>
+              </center><br>
+              <div class="quiz">
+                <h2 id="question">Question goes here</h2>
+                <div id="answer-buttons">
+                  <button class="btn">Answer 1</button>
+                  <button class="btn">Answer 2</button>
+                  <button class="btn">Answer 3</button>
+                  <button class="btn">Answer 4</button>
                 </div>
+                <button id="next-btn"> Next</button>
+              </div>
             </div>
-        </section> <br> <br>
+            <div id="resultspane" class="app"><center>
+              <h1 id="profilename">You are an: Avid Spender</h1>
+              <p id="profileinfo">Just spend less lol</p>
+              <div id="cardresults">
+                <div class="cardinfo"></div>
+              </div>
+            </center></div>
+        </section><br><br>
         <script src="static/script.js"></script>
-
-        <!--<center>
-            <form action="" style="background-color: whitesmoke;">
-            <label for="1-Question">Enter Your Preferred Crefit Card Company</label><br>
-            <input type="text" id="1-question" name="1-question">
-            <label for="2-Question">Enter Your Current Student Debt</label><br>
-            <input type="text" id="2-question" name="2-question">
-            </form>
-        </center>-->
 
     </body>
     

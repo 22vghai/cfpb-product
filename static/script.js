@@ -8,6 +8,7 @@ for (const state of states) {
     state_options.push({ text: state });
 }
 const questions = [
+    /*
     {
         question: "What state do you live in?",
         answers: state_options,
@@ -65,6 +66,7 @@ const questions = [
             { text: "greater than or equal to 720" },
         ]
     },
+    */
     {
         question: "Do you have past credit card debt?",
         answers: [
@@ -128,16 +130,47 @@ function resetState() {
 }
 
 async function showResults() {
+    resetState();
     const response = await fetch('/fetchcards', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(responses),
     });
-    const recommends = await response.text();
-    questionElement.innerText = recommends;
-    resetState();
+    const recommends = await response.json();
+    document.querySelector('#profilename').innerText = "You are a(n): " + recommends.profile;
+    document.querySelector('#profileinfo').innerText = recommends.profileinfo;
+
+    for (const card of recommends.cards) {
+        let card_div = document.createElement('DIV');
+        card_div.classList.add('cardinfo');
+
+        let [card_name_container, card_name_label] = make_tooltip(card.name, card.name);
+        card_name_label.style.fontSize = "20px";
+        card_div.appendChild(card_name_container);
+
+        let [provider_name_container, ] = make_tooltip(card.provider, card.provider);
+        card_div.appendChild(provider_name_container);
+        
+
+        document.querySelector('#cardresults').appendChild(card_div);
+    }
+
+    document.querySelector("#quizpane").style.display = "none";
+    document.querySelector("#resultspane").style.display = "block";
+    /*
     nextButton.innerHTML = "Retake Quiz";
     nextButton.style.display = "block";
+    */
+}
+function make_tooltip(main_text, tooltip_text) {
+    let container = document.createElement('DIV');
+    container.classList.add('hovertip');
+    let label = document.createElement('DIV');
+    label.style.whiteSpace = "nowrap";
+    label.style.overflow = "hidden";
+    label.innerText = main_text; container.dataset.text = tooltip_text;
+    container.appendChild(label);
+    return [container, label];
 }
 
 async function handleNextButton() {
