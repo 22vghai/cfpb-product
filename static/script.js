@@ -107,16 +107,18 @@ function showQuestion() {
         append_to = document.createElement('SELECT');
         answerButtons.appendChild(append_to);
     }
-    let option_num = -1; // ugly hack lol
+    let option_num = 0;
     for (const answer of question.answers) {
+        console.log(answer);
         let button = document.createElement((question.dropdown == true) ? 'OPTION' : 'BUTTON');
         button.innerText = answer.text;
-        if (question.dropdown != true) { button.classList.add("btn"); }
+        let option_num_copy = option_num;
         option_num += 1;
+        if (question.dropdown != true) { button.classList.add("btn"); }
         append_to.appendChild(button);
         if (question.dropdown == true) { continue; }
         button.addEventListener("click", function() {
-            submit_answer(currentQuestionIndex, option_num);
+            submit_answer(currentQuestionIndex, option_num_copy);
             for (choice of append_to.children) {
                 choice.classList.remove('optionselected');
             }
