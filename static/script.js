@@ -107,22 +107,25 @@ function showQuestion() {
         append_to = document.createElement('SELECT');
         answerButtons.appendChild(append_to);
     }
-    let option_num = 0;
+    let option_num = -1; // ugly hack lol
     for (const answer of question.answers) {
         let button = document.createElement((question.dropdown == true) ? 'OPTION' : 'BUTTON');
         button.innerText = answer.text;
-        button.classList.add("btn");
+        if (question.dropdown != true) { button.classList.add("btn"); }
         option_num += 1;
         append_to.appendChild(button);
+        if (question.dropdown == true) { continue; }
         button.addEventListener("click", function() {
-            responses[currentQuestionIndex] = option_num;
-            nextButton.style.display = "block";
-            window.scrollTo(0, document.body.scrollHeight);
-            if (question.dropdown == true) { return; }
+            submit_answer(currentQuestionIndex, option_num);
             for (choice of append_to.children) {
                 choice.classList.remove('optionselected');
             }
             button.classList.add('optionselected');
+        });
+    }
+    if (question.dropdown == true) {
+        append_to.addEventListener('change', function() {
+            submit_answer(currentQuestionIndex, append_to.selectedIndex);
         });
     }
 }
@@ -132,6 +135,12 @@ function resetState() {
     while (answerButtons.firstChild) {
         answerButtons.removeChild(answerButtons.firstChild);
     }
+}
+
+function submit_answer(question_indx, answer_indx) {
+    responses[question_indx] = answer_indx;
+    nextButton.style.display = "block";
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 async function showResults() {
@@ -150,7 +159,7 @@ async function showResults() {
         card_div.classList.add('cardinfo');
 
         let [card_name_container, card_name_label] = make_tooltip(card.name, card.name);
-        card_name_label.style.fontSize = "20px";
+        card_name_label.style.fontSize = "25px";
         card_div.appendChild(card_name_container);
 
         let [provider_name_container, ] = make_tooltip(card.provider, card.provider);
