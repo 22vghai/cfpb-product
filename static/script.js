@@ -16,73 +16,105 @@ for (const state of states) {
 }
 const questions = [
     {
+        friendlyName: "state",
         question: "What state do you live in?",
         answers: state_options,
         dropdown: true,
     },
     {
-        question: "How often do you eat out at a restaraunt?",
+        friendlyName: "ownedBefore",
+        question: "Have you owned a credit card before?",
         answers: [
-            { text: "daily" },
-            { text: "weekly" },
-            { text: "biweekly" },
-            { text: "every weekend" },
+            { text: "Yes" },
+            { text: "No" },
         ]
     },
     {
-        question: "How often do you order takeout?",
+        friendlyName: "whyNoCard",
+        question: "Why do you not own a credit card?",
         answers: [
-            { text: "daily" },
-            { text: "weekly" },
-            { text: "biweekly" },
-            { text: "every weekend" },
+            { text: "Never felt the need to get one" },
+            { text: "I don't like the idea of debt" },
+            { text: "I applied and was rejected" },
+            { text: "N/A" },
+        ],
+        requires: { dependsOn: "ownedBefore", choices: [1], defaultChoice: 3 }
+    },
+    {
+        friendlyName: "impulseBuying",
+        question: "You're on Amazon and an item catches your eye. There's only 1 left in stock. What would you do?",
+        answers: [
+            { text: "Buy it before anybody else gets it" },
+            { text: "Check the price and see if it's in your budget" },
+            { text: "Put it on a wishlist to think about later" },
+        ],
+    },
+    {
+        friendlyName: "onlineShoppingFreq",
+        question: "How often do you shop online?",
+        answers: [
+            { text: "I live on Amazon" },
+            { text: "Frequently" },
+            { text: "Sometimes" },
+            { text: "Rarely" },
+            { text: "Never" },
         ]
     },
     {
-        question: "How much income do you earn yearly?",
+        friendlyName: "usageFreq",
+        question: "How often do you use/intend to use your credit card?",
         answers: [
-            { text: "<$30,000" },
-            { text: "$30,000-$60,000" },
-            { text: "$60,000-$80,000" },
-            { text: "$80,000>" },
-        ]
+            { text: "As little as possible" },
+            { text: "Rarely" },
+            { text: "Sometimes" },
+            { text: "Often" },
+            { text: "Whenever possible" },
+        ],
     },
     {
-        question: "What year of college are you currently in",
+        friendlyName: "creditScore",
+        question: "What is your credit score?",
         answers: [
-            { text: "freshman" },
-            { text: "sophmore" },
-            { text: "junior" },
-            { text: "senior" },
-        ]
+            { text: "Not sure" },
+            { text: "Less than or equal to 619" },
+            { text: "Between 620 and 719 (inclusive)" },
+            { text: "Greater than or equal to 720" },
+        ],
+        requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 0 }
     },
     {
-        question: "Have you had a credit card before?",
+        friendlyName: "pastDebt",
+        question: "Do you have any pre-existing credit card debt?",
         answers: [
-            { text: "yes" },
-            { text: "no, never applied for one" },
-            { text: "no, applied and was rejected" },
-        ]
+            { text: "None" },
+            { text: "Very little (less than 100)" },
+            { text: "Some amount (between 100 and 500)" },
+            { text: "A lot (more than 500)" },
+        ],
+        requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 0 }
     },
     {
-        question: "Do you have a credit score? If so, what range is it in?",
+        friendlyName: "annualFees",
+        question: "Are you comfortable paying an annual fee for premium benefits?",
         answers: [
-            { text: "less than or equal to 619" },
-            { text: "between 620 and 719 (inclusive)" },
-            { text: "greater than or equal to 720" },
-        ]
+            { text: "It's my card, I shouldn't have to pay extra ($0)" },
+            { text: "A small amount (less than $50 per year)" },
+            { text: "A decent amount (less than $100 per year)" },
+            { text: "I don't mind an annual fee" },
+        ],
     },
     {
-        question: "Do you have past credit card debt?",
+        friendlyName: "creditLimit",
+        question: "How important is a large credit limit for you?",
         answers: [
-            { text: "no" },
-            { text: "yes, less than $1,000" },
-            { text: "yes, between $1,001 and $5,000" },
-            { text: "yes, more than $5,000" },
-        ]
-    }
+            { text: "Very important" },
+            { text: "Somewhat important" },
+            { text: "Not very important" },
+            { text: "I'm not sure" },
+        ],
+    },
 ];
-let responses = [];
+let responses = {};
 
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
@@ -92,7 +124,7 @@ let currentQuestionIndex = 0;
 
 function startQuiz() {
     currentQuestionIndex = 0;
-    responses = [];
+    responses = {};
     nextButton.innerHTML = "Next";
     showQuestion();
 };
@@ -100,6 +132,18 @@ function startQuiz() {
 function showQuestion() {
     resetState();
     let question = questions[currentQuestionIndex];
+    if (typeof question.requires != 'undefined') {
+        let req = question.requires;
+        let allowed = false;
+        for (const opt of req.choices) {
+            allowed = allowed || responses[req.dependsOn] == opt;
+        }
+        if (!allowed) {
+            submit_answer(currentQuestionIndex, req.defaultChoice);
+            handleNextButton();
+            return;
+        }
+    }
     questionElement.innerText = '' + (currentQuestionIndex + 1) + ". " + question.question;
 
     let append_to = answerButtons;
@@ -109,7 +153,6 @@ function showQuestion() {
     }
     let option_num = 0;
     for (const answer of question.answers) {
-        console.log(answer);
         let button = document.createElement((question.dropdown == true) ? 'OPTION' : 'BUTTON');
         button.innerText = answer.text;
         let option_num_copy = option_num;
@@ -130,6 +173,7 @@ function showQuestion() {
             submit_answer(currentQuestionIndex, append_to.selectedIndex);
         });
     }
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function resetState() {
@@ -140,7 +184,7 @@ function resetState() {
 }
 
 function submit_answer(question_indx, answer_indx) {
-    responses[question_indx] = answer_indx;
+    responses[questions[question_indx].friendlyName] = answer_indx;
     nextButton.style.display = "block";
     window.scrollTo(0, document.body.scrollHeight);
 }
@@ -184,10 +228,8 @@ async function showResults() {
 
     document.querySelector("#quizpane").style.display = "none";
     document.querySelector("#resultspane").style.display = "block";
-    /*
-    nextButton.innerHTML = "Retake Quiz";
-    nextButton.style.display = "block";
-    */
+    
+    window.scrollTo(0, document.body.scrollHeight);
 }
 function make_tooltip(main_text, tooltip_text) {
     let container = document.createElement('DIV');
