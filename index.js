@@ -1,3 +1,4 @@
+const questions = require('./common/questions.js');
 const express = require('express');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
@@ -11,16 +12,34 @@ const states = [ 'PLEASE SELECT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC'
 
 let app = express();
 let static_path  = path.join(__dirname, 'static');
+let common_path  = path.join(__dirname, 'common');
 
 app.use(express.json());
 app.post('/fetchcards', function(req, res) {
-    console.log(req.body);
+    let persona_scores = {};
+    let top_persona_cat = "Balanced";
+    let top_persona_num = 0;
+    for (const q_name in req.body) {
+        let q_info = questions.get_question_by_name(q_name);
+        if (typeof q_info == 'undefined') { continue; }
+        let selection = req.body[q_name];
+        let deltas = q_info.answers[selection].deltas;
+        if (typeof deltas == 'undefined') { continue; }
+        for (delta in deltas) {
+            persona_scores[delta] = (persona_scores[delta] || 0) + deltas[delta];
+            if (persona_scores[delta] >= top_persona_num) {
+                top_persona_cat = delta;
+                top_persona_num = persona_scores[delta];
+            }
+        }
+    } 
+
     let state = states[req.body.state];
     let credit_level = req.body.creditScore;
     if (credit_level < 1) { credit_level = 1; }
     credit_level = 'APR Credit ' + credit_level;
 
-    let sql = `SELECT Provider, "Product Name", "${credit_level}", "Annualized Periodic Fees" FROM cards WHERE State IS NULL OR State = "" OR State LIKE "%${state}%" ORDER BY "${credit_level}"`;
+    let sql = `SELECT Provider, "Product Name", "${credit_level}", "Annualized Periodic Fees", "Services", "Other Services", Rewards FROM cards WHERE State IS NULL OR State = "" OR State LIKE "%${state}%" ORDER BY "${credit_level}"`;
     db.all(sql, [], (err, rows) => {
         if (err) {
             res.json({
@@ -30,60 +49,38 @@ app.post('/fetchcards', function(req, res) {
             return;
         }
         let json = {
-            profile: "Avid Spender",
-            profileinfo: "You like to spend a lot. TODO",
+            profile: top_persona_cat + " Spender",
+            profileinfo: questions.persona_descriptions[top_persona_cat],
             cards: [],
         };
         let n = 0;
         rows.forEach((row) => {
             if (row['Provider'].toLowerCase().includes('vermont')) { return; }
+            if (row['Provider'].toLowerCase().includes('credit union')) { return; }
+            if (row['Provider'].toLowerCase().includes('county')) { return; }
+            if (row['Provider'].toLowerCase().includes('student')) { return; }
             if (n > 3) { return; }
             n += 1;
             json.cards.push({
                 name: row['Product Name'],
                 provider: row['Provider'],
-                apr: row[credit_level],
-                annual_fees: row["Annualized Periodic Fees"],
+                apr: '' + row[credit_level] + '%',
+                annual_fees: '$' + row["Annualized Periodic Fees"] + '/year',
                 extra_fees: "unimplemented!()",
-                benefits: "unimplemented!()",
+                benefits: row['Services'] || row['Other Services'] || row['Rewards'],
                 is_secured: false,
                 misc_terms: "unimplemented!()"
             });
         });
         res.json(json);
     });
-    /*
-    res.json({
-        "profile": "Avid Spender",
-        "profileinfo": "You're gonna go broke",
-        "cards": [
-            {
-                "name": "Cardy McCardfaceAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                "provider": "Some Bank",
-                "apr": "42%",
-                "annual_fees": "$99999",
-                "extra_fees": "sell us your soul",
-                "benefits": "lmao none",
-                "is_secured": false,
-                "misc_terms": "idk i forgor"
-            },
-            {
-                "name": "Some card 2.0",
-                "provider": "Another Bank",
-                "apr": "99%",
-                "annual_fees": "$0",
-                "extra_fees": "???",
-                "benefits": "???",
-                "secured": true,
-                "misc_terms": "none"
-            }
-        ]
-    });
-    */
-})
+});
+
 app.get('/', function(req, res) {
     res.sendFile(path.join(static_path, 'index.html'));
 });
 app.use('/', express.static(static_path));
+app.use('/common/', express.static(common_path));
+
 
 app.listen(8080);
