@@ -72,39 +72,76 @@ body {
     display: none;
 }
 #cardresults {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
     display: flex;
+    flex-direction: row;
+    justify-content: center;
     flex-wrap: wrap;
+
     gap: 20px;
 }
 .cardinfo {
-    border-radius: 8px;
-    background-color: #dfdfdf;
+    position: relative;
+    perspective: 1000px;
 
+    border-radius: 8px;
+
+    padding: 20px;
+
+    width: 70%;
+    border-style: groove;
+}
+
+.cardcontainerinner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    transition: transform 1s;
+    transform-style: preserve-3d;
+
+    display: grid;
+}
+
+.cardinfo:hover .cardcontainerinner {
+    transform: rotateY( 180deg ) ;
+    transition: transform 0.5s;
+}
+
+.cardheader, .carddata {
+    grid-column: 1;
+    grid-row: 1;
+
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.cardheader {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
+}
+.carddata {
+    transform: rotateY( 180deg );
 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    flex: calc(50% - 20px);
-    max-width: calc(50% - 20px);
-    padding: 20px;
 }
-@media screen and (max-width: 1000px) {
-    .cardinfo {
-        flex: 100%;
-        max-width: 100%;
-    }
-}
-@media screen and (max-width: 600px) {
-    #cardresults {
-        flex-direction: column;
-    }
+.carddata > * {
+    text-align: left;
 }
 
 .hovertip {
     position: relative;
     max-width: 100%;
+    overflow: wrap;
 }
 .hovertip:before {
     position: absolute;
@@ -128,13 +165,4 @@ body {
 }
 .hovertip:hover:before {
     display:block;
-}
-
-.carddata {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-.carddata > * {
-    text-align: left;
 }

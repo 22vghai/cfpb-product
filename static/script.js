@@ -1,3 +1,5 @@
+const CARD_COLORS = ["#e8bcbc", "#e8e7bc", "#c4e8bc", "#bce8e2", "#bcd2e8", "#d5bce8", "#e8bcc6"];
+
 const ENUM_CARD_PROPERTIES = {
     "apr": "APR", 
     "annual_fees": "Annual Fees", 
@@ -83,6 +85,9 @@ function submit_answer(question_indx, answer_indx) {
 
 async function showResults() {
     resetState();
+
+    document.querySelector('#quizpane').style.maxWidth = "100%";
+
     const response = await fetch('/fetchcards', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
@@ -95,26 +100,32 @@ async function showResults() {
     for (const card of recommends.cards) {
         let card_div = document.createElement('DIV');
         card_div.classList.add('cardinfo');
+        let color = CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)];
+        card_div.style.backgroundColor = color;
+        card_div.style.borderColor = color;
+            let card_inner = document.createElement('DIV');
+            card_inner.classList.add('cardcontainerinner');
+                let card_header = document.createElement('DIV');
+                    card_header.classList.add('cardheader');
+                    let [card_name_container, card_name_label] = make_tooltip(card.name, card.name);
+                    card_name_label.style.fontSize = "25px";
+                    card_header.appendChild(card_name_container);
+                    let [provider_name_container, ] = make_tooltip(card.provider, card.provider);
+                    card_header.appendChild(provider_name_container);
+                card_inner.appendChild(card_header);
 
-        let [card_name_container, card_name_label] = make_tooltip(card.name, card.name);
-        card_name_label.style.fontSize = "25px";
-        card_div.appendChild(card_name_container);
-
-        let [provider_name_container, ] = make_tooltip(card.provider, card.provider);
-        card_div.appendChild(provider_name_container);
-
-        let info_grid = document.createElement('DIV');
-        info_grid.classList.add('carddata');
-        for (const prop in ENUM_CARD_PROPERTIES) {
-            let prop_div = document.createElement('DIV');
-            let val_div = document.createElement('DIV'); 
-            prop_div.innerText = ENUM_CARD_PROPERTIES[prop];
-            val_div.innerText = card[prop];
-            info_grid.appendChild(prop_div);
-            info_grid.appendChild(val_div);
-        }
-        card_div.appendChild(info_grid);
-
+                let info_grid = document.createElement('DIV');
+                info_grid.classList.add('carddata');
+                    for (const prop in ENUM_CARD_PROPERTIES) {
+                        let prop_div = document.createElement('DIV');
+                        let val_div = document.createElement('DIV'); 
+                        prop_div.innerText = ENUM_CARD_PROPERTIES[prop];
+                        val_div.innerText = card[prop];
+                        info_grid.appendChild(prop_div);
+                        info_grid.appendChild(val_div);
+                    }
+                card_inner.appendChild(info_grid);
+            card_div.appendChild(card_inner);
         document.querySelector('#cardresults').appendChild(card_div);
     }
 

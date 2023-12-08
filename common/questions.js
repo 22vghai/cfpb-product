@@ -24,6 +24,7 @@ else {
             answers: state_options,
             dropdown: true,
         },
+        /*
         {
             friendlyName: "ownedBefore",
             question: "Have you owned a credit card before?",
@@ -74,6 +75,7 @@ else {
                 { text: "Whenever possible" },
             ],
         },
+        */
         {
             friendlyName: "creditScore",
             question: "What is your credit score?",
