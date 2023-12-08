@@ -24,7 +24,6 @@ else {
             answers: state_options,
             dropdown: true,
         },
-        /*
         {
             friendlyName: "ownedBefore",
             question: "Have you owned a credit card before?",
@@ -37,51 +36,60 @@ else {
             friendlyName: "whyNoCard",
             question: "Why do you not own a credit card?",
             answers: [
-                { text: "Never felt the need to get one" },
-                { text: "I don't like the idea of debt", deltas: { "Cautious": 1 } },
-                { text: "I applied and was rejected" },
+                { text: "Never felt the need to get one", deltas: { "Credit": 1 } },
+                { text: "I don't like the idea of debt", deltas: { "Credit": 2 } },
+                { text: "I applied and was rejected", deltas: { "Credit": -1 } },
                 { text: "N/A" },
             ],
             requires: { dependsOn: "ownedBefore", choices: [1], defaultChoice: 3 }
         },
         {
-            friendlyName: "impulseBuying",
-            question: "You're on Amazon and an item catches your eye. There's only 1 left in stock. What would you do?",
-            answers: [
-                { text: "Buy it before anybody else gets it", deltas: { "Avid": 1 } },
-                { text: "Check the price and see if it's in your budget", deltas: { "Balanced": 1 } },
-                { text: "Put it on a wishlist to think about later", deltas: {"Cautious": 1 } },
-            ],
-        },
-        {
             friendlyName: "onlineShoppingFreq",
             question: "How often do you shop online?",
             answers: [
-                { text: "I live on Amazon", deltas: { "Avid": 2 } },
-                { text: "Frequently", deltas: { "Avid": 1 } },
-                { text: "Sometimes", deltas: { "Balanced": 1 } },
-                { text: "Rarely", deltas: { "Cautious": 1 } },
-                { text: "Never", deltas: { "Cautious": 2 } },
+                { text: "I live on Amazon", deltas: { "Spending": 2 } },
+                { text: "Frequently", deltas: { "Spending": 1 } },
+                { text: "Sometimes", deltas: { "Spending": 0 } },
+                { text: "Rarely", deltas: { "Spending": -1 } },
+                { text: "Never", deltas: { "Spending": -2 } },
+            ]
+        },
+        {
+            friendlyName: "impulseBuying",
+            question: "You're on Amazon and an item catches your eye. There's only 1 left in stock. What would you do?",
+            answers: [
+                { text: "Buy it before anybody else gets it", deltas: { "Spending": 2 } },
+                { text: "Check the price and see if it's in your budget", deltas: { "Spending": 1 } },
+                { text: "Put it on a wishlist to think about later", deltas: {"Spending": -1 } },
+            ],
+        },
+        {
+            friendlyName: "laptopScenario",
+            question: "You just broke your laptop and the repairman quotes you $700 dollars to fix it. What do you do?",
+            answers: [
+                { text: "Ask a friend or daily member to borrow their laptop for the time being", deltas: { "Spending": -1} },
+                { text: "Dip into my savings to pay it off" },
+                { text: "Ask for my parents to pay for it", deltas: { "Spending": -1 } },
+                { text: "Use my credit card to pay for it", deltas: { "Credit": 1 } },
             ]
         },
         {
             friendlyName: "usageFreq",
             question: "How often do you use/intend to use your credit card?",
             answers: [
-                { text: "As little as possible" },
-                { text: "Rarely" },
-                { text: "Sometimes" },
-                { text: "Often" },
-                { text: "Whenever possible" },
+                { text: "As little as possible", deltas: { "Credit": -2 } },
+                { text: "Rarely", deltas: { "Credit": -1 } },
+                { text: "Sometimes", deltas: { "Credit": 0 } },
+                { text: "Often", deltas: { "Credit": 1 } },
+                { text: "Whenever possible", deltas: { "Credit": 2 } },
             ],
         },
-        */
         {
             friendlyName: "creditScore",
             question: "What is your credit score?",
             answers: [
                 { text: "Not sure" },
-                { text: "Less than or equal to 619" },
+                { text: "Less than or equal to 619", deltas: { "Credit": 2 } },
                 { text: "Between 620 and 719 (inclusive)" },
                 { text: "Greater than or equal to 720" },
             ],
@@ -94,7 +102,7 @@ else {
                 { text: "None" },
                 { text: "Very little (less than 100)" },
                 { text: "Some amount (between 100 and 500)" },
-                { text: "A lot (more than 500)" },
+                { text: "A lot (more than 500)", deltas: { "Credit": 2 } },
             ],
             requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 0 }
         },
@@ -127,9 +135,50 @@ else {
         }
         return undefined;
     }
-    exports.persona_descriptions = {
-        "Avid": "You tend to spend often and in large amounts. Make sure to stick to a budget!",
-        "Balanced": "You tend to be moderate in your spending decisions. Good job!",
-        "Cautious": "You tend to err on the side of caution"
+    exports.score_bounds = function(category) {
+        let max = 0;
+        let min = 0;
+        for (const question of exports.questions) {
+            let q_max_delta = 0;
+            let q_min_delta = 0;
+            for (const answer of question.answers) {
+                if (typeof answer.deltas == 'undefined') { continue; }
+                let delta = answer.deltas[category];
+                if (typeof delta == 'undefined') { continue; }
+                if (delta > q_max_delta) { q_max_delta = delta; }
+                if (delta < q_min_delta) { q_min_delta = delta; }
+            }
+            max += q_max_delta;
+            min += q_min_delta;
+        }
+        return [min, max];
+    }
+    exports.credit_description = function(score) {
+        let bounds = exports.score_bounds("Credit");
+        let range = bounds[1] - bounds[0];
+        let min = bounds[0];
+        if (score >= min + range * 0.8) {
+            return ["Credit-Eager", "You are very comfortable with using a credit card. Make sure to only spend what you can pay off to keep building that credit score!"];
+        }
+        if (score >= min + range * 0.4) {
+            return ["Credit-Neutral", "You are comfortable with using a credit card. Use it responsibly to build a good credit score!"];
+        }
+        else {
+            return ["Credit-Fearing", "You are quite cautious about a credit card. Keep in mind that building a credit score requires using your card, and is necessary for future loans like mortages"];
+        }
+    };
+    exports.spending_description = function(score) {
+        let bounds = exports.score_bounds("Spending");
+        let range = bounds[1] - bounds[0];
+        let min = bounds[0];
+        if (score >= min + range * 0.66) {
+            return ["Avid Spender", "You are an avid spender. Make sure you stick to a budget!"];
+        }
+        if (score >= min + range * 0.33) {
+            return ["Balanced Spender", "You are a balanced spender. Good job with moderation!"];
+        }
+        else {
+            return ["Cautious Spender", "You are a cautious spender. Make sure to use those savings once in a while!"];
+        }
     };
 })(export_table);

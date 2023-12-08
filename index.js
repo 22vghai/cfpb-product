@@ -16,9 +16,7 @@ let common_path  = path.join(__dirname, 'common');
 
 app.use(express.json());
 app.post('/fetchcards', function(req, res) {
-    let persona_scores = {};
-    let top_persona_cat = "Balanced";
-    let top_persona_num = 0;
+    let persona_scores = {"Spending": 0, "Credit": 0};
     for (const q_name in req.body) {
         let q_info = questions.get_question_by_name(q_name);
         if (typeof q_info == 'undefined') { continue; }
@@ -27,12 +25,12 @@ app.post('/fetchcards', function(req, res) {
         if (typeof deltas == 'undefined') { continue; }
         for (delta in deltas) {
             persona_scores[delta] = (persona_scores[delta] || 0) + deltas[delta];
-            if (persona_scores[delta] >= top_persona_num) {
-                top_persona_cat = delta;
-                top_persona_num = persona_scores[delta];
-            }
         }
-    } 
+    }
+    let credit_desc = questions.credit_description(persona_scores["Credit"]);
+    let spending_desc = questions.spending_description(persona_scores["Spending"]);
+    let persona_name = credit_desc[0] + " " + spending_desc[0];
+    let persona_desc = spending_desc[1] + "\n" + credit_desc[1];
 
     let state = states[req.body.state];
     let credit_level = req.body.creditScore;
@@ -49,8 +47,8 @@ app.post('/fetchcards', function(req, res) {
             return;
         }
         let json = {
-            profile: top_persona_cat + " Spender",
-            profileinfo: questions.persona_descriptions[top_persona_cat],
+            profile: persona_name,
+            profileinfo: persona_desc,
             cards: [],
         };
         let n = 0;
