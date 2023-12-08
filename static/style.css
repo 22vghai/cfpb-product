@@ -5,8 +5,8 @@
     box-sizing: border-box;
 }
 body {
-    background-image: url(light_yellow_blue_bg_lg.jpg);
-    background-repeat: no-repeat;
+    background-image: url(light_blue_pink_bg_lg.jpg);
+    background-repeat: repeat;
     background-attachment: scroll;
 }
 .app {

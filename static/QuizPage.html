@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body{
+            background-image: url(light_yellow_blue_bg_lg.jpg);
+        }
+    </style>
+</head>
+<body>
+    
+    <section id="navbar">
+        <div class="container">
+          <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+              <!--<img style="width: 50px;height: 50px;" src="Bank_Bank_Industries_Logo_1.png" alt="Bank_Bank_Industries_Logo_1">-->
+              <span class="fs-4" style="color: white; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: 700;">Limit</span>
+            </a>
+      
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a href="index.html" class="nav-link" style="color: white;">Home</a></li>
+            <li class="nav-item"><a href="QuizPage.html" class="nav-link active" aria-current="page">Quiz</a></li>
+            <!--<li class="nav-item"><a href="#Portfolio" class="nav-link" style="color: white;">Portfolio</a></li>-->
+            <!--<li class="nav-item"><a href="#Partners" class="nav-link" style="color: white;">Partners</a></li>-->
+            <li class="nav-item"><a href="TeamPage.html" class="nav-link" style="color: white;">Team</a></li>
+          </ul>
+          </header>
+        </div>
+      </section>
+
+    <section id="quiz">
+        <div id="quizpane" class="app">
+          <center>
+              <h1 style="font-family: 'Times New Roman', Times, serif;">Welcome to Limit!</h1>
+          </center><br>
+          <div class="quiz">
+            <h2 id="question">Question goes here</h2>
+            <div id="answer-buttons">
+              <button class="btn">Answer 1</button>
+              <button class="btn">Answer 2</button>
+              <button class="btn">Answer 3</button>
+              <button class="btn">Answer 4</button>
+            </div>
+            <button id="next-btn"> Next</button>
+          </div>
+        </div>
+        <div id="resultspane" class="app"><center>
+          <h1 id="profilename"></h1>
+          <p id="profileinfo"></p>
+          <div id="cardresults"></div>
+        </center></div>
+    </section><br><br>
+    <script src="script.js"></script>
+
+    
+</body>
+</html>

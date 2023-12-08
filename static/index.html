@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Credit Picker</title>
+        <title>Limit</title>
         <link rel="stylesheet" href="style.css">      
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -41,6 +41,123 @@
               right: 10px;
               cursor: pointer;
             }
+
+            .team-section {
+            text-align: center;
+            padding: 80px 20px;
+            background-color: #fff;
+            }
+
+            .team-member {
+            display: inline-block;
+            margin: 20px;
+            max-width: 300px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            }
+
+            .team-member img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px 8px 0 0;
+            }
+
+            .member-info {
+            padding: 20px;
+            }
+
+            h3 {
+            margin-top: 0;
+            }
+
+            #progress-container {
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            }
+
+            #progress-bar {
+            width: 0;
+            height: 30px;
+            background-color: #4CAF50;
+            transition: width 0.3s ease-in-out;
+            }
+
+            .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
           </style>
           <title>Modal Example</title>
 
@@ -52,28 +169,29 @@
               <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
                 <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                   <!--<img style="width: 50px;height: 50px;" src="Bank_Bank_Industries_Logo_1.png" alt="Bank_Bank_Industries_Logo_1">-->
-                  <span class="fs-4" style="color: white; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: 500;">Credit Picker</span>
+                  <span class="fs-4" style="color: white; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: 700;">Limit</span>
                 </a>
           
               <ul class="nav nav-pills">
-                <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-                <li class="nav-item"><a href="#quiz" class="nav-link" style="color: white;">Quiz</a></li>
-                <li class="nav-item"><a href="#Portfolio" class="nav-link" style="color: white;">Portfolio</a></li>
-                <li class="nav-item"><a href="#Partners" class="nav-link" style="color: white;">Partners</a></li>
-                <li class="nav-item"><a href="#Team" class="nav-link" style="color: white;">Team</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link active" aria-current="page">Home</a></li>
+                <li class="nav-item"><a href="QuizPage.html" class="nav-link" style="color: white;">Quiz</a></li>
+                <!--<li class="nav-item"><a href="#Portfolio" class="nav-link" style="color: white;">Portfolio</a></li>-->
+                <!--<li class="nav-item"><a href="#Partners" class="nav-link" style="color: white;">Partners</a></li>-->
+                <li class="nav-item"><a href="TeamPage.html" class="nav-link" style="color: white;">Team</a></li>
               </ul>
               </header>
             </div>
           </section>
 
+          
 
         <!-- Trigger button to open the modal -->
-        <!--<button onclick="openModal()">Click Me</button>-->
+        <button onclick="openModal()" style="position: absolute; top: 57%; left: 19%; width: 400px; border-radius: 8px;">Privacy Statement</button>
         
         <!-- The Modal -->
         <div id="myModal" class="modal">
           <span class="close-btn" onclick="closeModal()">&times;</span>
-          <center><h2>Welcome to Credit Picker</h2>
+          <center><h2>Welcome to Limit</h2>
           <p>Choosing the right credit card is an arduos process but we can make it simple for you.</p>
             <p> Answer a few questions at the bottom of the page and we will match you to the ideal credit card for you. </p> 
             <p>Your personal data will not be collected!</p></center>
@@ -107,10 +225,10 @@
             <div class="container col-xxl-8 px-4 py-5">
               <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
                 <div class="col-10 col-sm-8 col-lg-6">
-                  <img src="credit_cards.jpg" class="d-block mx-lg-auto img-fluid" alt="Credit_Card_Placeholder" width="700" height="500" loading="lazy">
+                  <img src="credit_cards.jpg" class="d-block mx-lg-auto img-fluid" alt="Credit_Cards" width="700" height="500" loading="lazy">
                 </div>
                 <div class="col-lg-6">
-                  <center><h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3 rounded" style="background-color: #fff;">Credit Decisions Made Easy</h1><br></center>
+                  <center><h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="background-color: #fff; border-radius: 20px;">Which credit card do I choose?</h1><br></center>
                   <p class="lead" style="color: aliceblue;">A system that provides you all of the information you need about credit cards!</p>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <!--<button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
@@ -147,6 +265,173 @@
 
         <script src="common/questions.js"></script>
         <script src="script.js"></script>
+
+        <div class="container marketing">
+      
+      
+          <!-- START THE FEATURETTES -->
+      
+          <!--<hr class="featurette-divider">-->
+      
+        <section id="featurettes"> 
+          <div class="row featurette">
+            <div class="col-md-7">
+              <h2 class="featurette-heading fw-normal lh-1">Welcome to Limit, <span class="text-body-secondary">The Solution to Your Credit Card Worries</span></h2>
+              <p class="lead">Choosing a credit card is an arduos process, but we make it simple for you. Take our quiz today and find out what credit card you should choose!</p>
+            </div>
+            <div class="col-md-5">
+              <!--<svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>-->
+              <img src="credit_cards_small.jpg" alt="credit_cards" style="max-width: fit-content;">
+            </div>
+          </div>
+      
+          <hr class="featurette-divider">
+      
+          <div class="row featurette">
+            <div class="col-md-7 order-md-2">
+              <h2 class="featurette-heading fw-normal lh-1">The FACTS, <span class="text-body-secondary">See for yourself.</span></h2>
+              <p class="lead">Credit card companies make it obscenly difficult to gather accurate information and make an informed choice. Backed by research and data from the CFPB, we have designed an efficient method for you to save time and get a head start on building credit!</p>
+            </div>
+            <div class="col-md-5">
+              <img src="frustrated_consumer.jpg" alt="frustrated_consumer">
+            </div>
+          </div>
+      
+          <hr class="featurette-divider">
+      
+          <div class="row featurette">
+            <div class="col-md-7">
+              <h2 class="featurette-heading fw-normal lh-1">What else? <span class="text-body-secondary">Learn more by visiting the <a href="https://www.consumerfinance.gov/" target="_blank">CFPB</a> website.</span></h2>
+              <p class="lead">The CFPB is a government agency intended to protect consumers from banks, lenders, and other financial institutions.</p>
+            </div>
+            <div class="col-md-5">
+              <img src="credit_purchase.jpg" alt="credit_purchase">
+            </div>
+          </div>
+      
+          <hr class="featurette-divider">
+        </section> 
+      
+          <!-- /END THE FEATURETTES -->
+      
+        </div><!-- /.container -->
+      
+      
+        <!-- FOOTER -->
+        <footer class="container">
+          <p class="float-end"><a href="#">Back to top</a></p>
+          <p style="color: white;">&copy; Limit, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        </footer>
+      </main>
+      <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!--<div id="progress-container" style="position: absolute; top: 72%; left: 40%;">
+            <div id="progress-bar"></div>
+          </div>
+          
+          <button onclick="startProgress()" style="position: absolute; top: 67%; left: 46%;">Start Progress</button>
+          
+          <script>
+            function startProgress() {
+              var progressBar = document.getElementById('progress-bar');
+              var width = 0;
+              
+              var interval = setInterval(function () {
+                if (width >= 100) {
+                  clearInterval(interval);
+                } else {
+                  width += 10;
+                  progressBar.style.width = width + '%';
+                }
+              }, 500);
+            }
+          </script>-->
+
+          <br><br><br>
+
+        <!--<section id="Team" class="team-section" style="background-color: #555;">
+            <div class="team-member">
+              <img src="member1.jpg" alt="Team Member 1">
+              <div class="member-info">
+                <h3>Andrew Xie</h3>
+                <p>Product Developer</p>
+              </div>
+            </div>
+          
+            <div class="team-member">
+              <img src="member2.jpg" alt="Team Member 2">
+              <div class="member-info">
+                <h3>Sandeep Kaur</h3>
+                <p>Data Researcher</p>
+              </div>
+            </div>
+          
+            <div class="team-member">
+              <img src="member3.jpg" alt="Team Member 3">
+              <div class="member-info">
+                <h3>Jason Lei</h3>
+                <p>Communications Expert</p>
+              </div>
+            </div>
+          
+            <div class="team-member">
+              <img src="member1.jpg" alt="Team Member 4">
+              <div class="member-info">
+                <h3>Vinayak Ghai</h3>
+                <p>Frontend Developer</p>
+              </div>
+            </div>
+          
+            <div class="team-member">
+              <img src="member2.jpg" alt="Team Member 5">
+              <div class="member-info">
+                <h3>Nicole Mendoza</h3>
+                <p>Graduate Research Specialist</p>
+              </div>
+            </div>
+          
+            <div class="team-member">
+              <img src="member3.jpg" alt="Team Member 6">
+              <div class="member-info">
+                <h3>Monika Maker</h3>
+                <p>Data Researcher</p>
+              </div>
+            </div>
+
+            <div class="team-member">
+                <img src="member3.jpg" alt="Team Member 7">
+                <div class="member-info">
+                  <h3>Rachel Lam</h3>
+                  <p>Data Researcher</p>
+                </div>
+              </div>
+
+              <div class="team-member">
+                <img src="member3.jpg" alt="Team Member 8">
+                <div class="member-info">
+                  <h3>Alex Gilman</h3>
+                  <p>Data Researcher</p>
+                </div>
+              </div>
+
+              <div class="team-member">
+                <img src="member3.jpg" alt="Team Member 9">
+                <div class="member-info">
+                  <h3>Adrian Cardova </h3>
+                  <p>Figma Guru</p>
+                </div>
+              </div>
+          </section>-->
+
+
+        <!--<center>
+            <form action="" style="background-color: whitesmoke;">
+            <label for="1-Question">Enter Your Preferred Crefit Card Company</label><br>
+            <input type="text" id="1-question" name="1-question">
+            <label for="2-Question">Enter Your Current Student Debt</label><br>
+            <input type="text" id="2-question" name="2-question">
+            </form>
+        </center>-->
 
     </body>
     
