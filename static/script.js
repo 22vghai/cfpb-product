@@ -131,8 +131,6 @@ async function showResults() {
 
     document.querySelector("#quizpane").style.display = "none";
     document.querySelector("#resultspane").style.display = "block";
-    
-    window.scrollTo(0, document.body.scrollHeight);
 }
 function make_tooltip(main_text, tooltip_text) {
     let container = document.createElement('DIV');

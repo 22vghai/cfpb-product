@@ -1,14 +1,7 @@
 const questions = require('./common/questions.js');
 const express = require('express');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./cards.db');
-
-const states = [ 'PLEASE SELECT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
-           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
-           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
-           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
-           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY'];
+const picker = require('./credit_picker.js');
 
 let app = express();
 let static_path  = path.join(__dirname, 'static');
@@ -32,46 +25,13 @@ app.post('/fetchcards', function(req, res) {
     let persona_name = credit_desc[0] + " " + spending_desc[0];
     let persona_desc = spending_desc[1] + "\n" + credit_desc[1];
 
-    let state = states[req.body.state];
-    let credit_level = req.body.creditScore;
-    if (credit_level < 1) { credit_level = 1; }
-    credit_level = 'APR Credit ' + credit_level;
-
-    let sql = `SELECT Provider, "Product Name", "${credit_level}", "Annualized Periodic Fees", "Services", "Other Services", Rewards FROM cards WHERE State IS NULL OR State = "" OR State LIKE "%${state}%" ORDER BY "${credit_level}"`;
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-            res.json({
-                "profile": "Error",
-                "profileinfo": "An error has occured",
-            });
-            return;
-        }
-        let json = {
-            profile: persona_name,
-            profileinfo: persona_desc,
-            cards: [],
-        };
-        let n = 0;
-        rows.forEach((row) => {
-            if (row['Provider'].toLowerCase().includes('vermont')) { return; }
-            if (row['Provider'].toLowerCase().includes('credit union')) { return; }
-            if (row['Provider'].toLowerCase().includes('county')) { return; }
-            if (row['Provider'].toLowerCase().includes('student')) { return; }
-            if (n > 3) { return; }
-            n += 1;
-            json.cards.push({
-                name: row['Product Name'],
-                provider: row['Provider'],
-                apr: '' + row[credit_level] + '%',
-                annual_fees: '$' + row["Annualized Periodic Fees"] + '/year',
-                extra_fees: "unimplemented!()",
-                benefits: row['Services'] || row['Other Services'] || row['Rewards'],
-                is_secured: false,
-                misc_terms: "unimplemented!()"
-            });
-        });
-        res.json(json);
-    });
+    let credit_selections = picker.pick_cards(spending_desc[2], credit_desc[2], req.body, 4);
+    let json = {
+        profile: persona_name,
+        profileinfo: persona_desc,
+        cards: credit_selections
+    };
+    res.json(json);
 });
 
 app.get('/', function(req, res) {

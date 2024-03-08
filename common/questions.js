@@ -28,8 +28,8 @@ else {
             friendlyName: "ownedBefore",
             question: "Have you owned a credit card before?",
             answers: [
-                { text: "Yes" },
                 { text: "No" },
+                { text: "Yes" },
             ]
         },
         {
@@ -41,7 +41,7 @@ else {
                 { text: "I applied and was rejected", deltas: { "Credit": -1 } },
                 { text: "N/A" },
             ],
-            requires: { dependsOn: "ownedBefore", choices: [1], defaultChoice: 3 }
+            requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 3 }
         },
         {
             friendlyName: "onlineShoppingFreq",
@@ -93,7 +93,7 @@ else {
                 { text: "Between 620 and 719 (inclusive)" },
                 { text: "Greater than or equal to 720" },
             ],
-            requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 0 }
+            requires: { dependsOn: "ownedBefore", choices: [1], defaultChoice: 0 }
         },
         {
             friendlyName: "pastDebt",
@@ -104,15 +104,15 @@ else {
                 { text: "Some amount (between 100 and 500)" },
                 { text: "A lot (more than 500)", deltas: { "Credit": 2 } },
             ],
-            requires: { dependsOn: "ownedBefore", choices: [0], defaultChoice: 0 }
+            requires: { dependsOn: "ownedBefore", choices: [1], defaultChoice: 0 }
         },
         {
             friendlyName: "annualFees",
             question: "Are you comfortable paying an annual fee for premium benefits?",
             answers: [
                 { text: "It's my card, I shouldn't have to pay extra ($0)" },
-                { text: "A small amount (less than $50 per year)" },
-                { text: "A decent amount (less than $100 per year)" },
+                { text: "A small amount (less than $25 per year)" },
+                { text: "A decent amount (less than $50 per year)" },
                 { text: "I don't mind an annual fee" },
             ],
         },
@@ -158,13 +158,13 @@ else {
         let range = bounds[1] - bounds[0];
         let min = bounds[0];
         if (score >= min + range * 0.8) {
-            return ["Credit-Eager", "You are very comfortable with using a credit card. Make sure to only spend what you can pay off to keep building that credit score!"];
+            return ["Credit-Eager", "You are very comfortable with using a credit card. Make sure to only spend what you can pay off to keep building that credit score!", 3];
         }
         if (score >= min + range * 0.4) {
-            return ["Credit-Neutral", "You are comfortable with using a credit card. Use it responsibly to build a good credit score!"];
+            return ["Credit-Neutral", "You are comfortable with using a credit card. Use it responsibly to build a good credit score!", 2];
         }
         else {
-            return ["Credit-Fearing", "You are quite cautious about a credit card. Keep in mind that building a credit score requires using your card, and is necessary for future loans like mortages"];
+            return ["Credit-Fearing", "You are quite cautious about a credit card. Keep in mind that building a credit score requires using your card, and is necessary for future loans like mortages", 1];
         }
     };
     exports.spending_description = function(score) {
@@ -172,13 +172,13 @@ else {
         let range = bounds[1] - bounds[0];
         let min = bounds[0];
         if (score >= min + range * 0.66) {
-            return ["Avid Spender", "You are an avid spender. Make sure you stick to a budget!"];
+            return ["Avid Spender", "You are an avid spender. Make sure you stick to a budget!", 3];
         }
         if (score >= min + range * 0.33) {
-            return ["Balanced Spender", "You are a balanced spender. Good job with moderation!"];
+            return ["Balanced Spender", "You are a balanced spender. Good job with moderation!", 2];
         }
         else {
-            return ["Cautious Spender", "You are a cautious spender. Make sure to use those savings once in a while!"];
+            return ["Cautious Spender", "You are a cautious spender. Make sure to use those savings once in a while!", 1];
         }
     };
 })(export_table);
